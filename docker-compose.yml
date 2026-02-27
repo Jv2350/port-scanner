@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  web:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - DEFAULT_OPTIONS=-sT -sV
+      - ALLOWED_NETWORKS=127.0.0.0/8,192.168.0.0/16,10.0.0.0/8
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    depends_on:
+      - redis
+  worker:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    command: python api/worker.py
+    environment:
+      - ALLOWED_NETWORKS=127.0.0.0/8,192.168.0.0/16,10.0.0.0/8
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+    depends_on:
+      - redis
