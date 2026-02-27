@@ -1,0 +1,5 @@
+fastapi>=0.95
+uvicorn[standard]>=0.22
+redis>=4.5
+rq>=1.16
+python-nmap>=0.7
